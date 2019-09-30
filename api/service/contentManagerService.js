@@ -21,7 +21,8 @@ function createOutputFile(data,fileName){
               "costPerGB",
               "partnerId"
             ],
-            renameHeaders: true
+            renameHeaders: true,
+            trim: true
           })
         )
         .on("data", function(row, err) {
@@ -32,21 +33,7 @@ function createOutputFile(data,fileName){
     });
   }
   
-  function problemStateMent_1(partnerDetails) {
-    var resp = [];
-    return new Promise(function(resolve, reject) {
-      fs.createReadStream("./assets/input.csv")
-        .pipe(
-          fastcsv.parse({ headers: ["deliveryId", "contentSize", "theatreId"] })
-        )
-        .on("data", function(row, err) {
-          if (err) console.log("in input file read", err);
-           const result = findDeliveryPartner(row, partnerDetails);
-          resp.push(result);
-        })
-        .on("end", ()=>resolve(resp));
-    });
-  }
+ 
   
   
   function getCapacities(){
@@ -59,7 +46,8 @@ function createOutputFile(data,fileName){
               "partnerId",
               "capacity"
             ],
-            renameHeaders: true
+            renameHeaders: true,
+            trim:true
           })
         )
         .on("data", function(row, err) {
@@ -70,7 +58,22 @@ function createOutputFile(data,fileName){
         
     });
   }
-
+  
+  function problemStateMent_1(partnerDetails) {
+    var resp = [];
+    return new Promise(function(resolve, reject) {
+      fs.createReadStream("./assets/input.csv")
+        .pipe(
+          fastcsv.parse({ headers: ["deliveryId", "contentSize", "theatreId"],trim:true })
+        )
+        .on("data", function(row, err) {
+          if (err) console.log("in input file read", err);
+           const result = findDeliveryPartner(row, partnerDetails);
+          resp.push(result);
+        })
+        .on("end", ()=>resolve(resp));
+    });
+  }
   
 function problemStateMent_2(partners,capacities){
     var inputFile = [];
@@ -79,7 +82,7 @@ function problemStateMent_2(partners,capacities){
     return new Promise(function(resolve, reject) {
       fs.createReadStream("./assets/input.csv")
         .pipe(
-          fastcsv.parse({ headers: ["deliveryId", "contentSize", "theatreId"] })
+          fastcsv.parse({ headers: ["deliveryId", "contentSize", "theatreId"],trim:true })
         )
         .on("data", function(row, err) {
           if (err) console.log("in input file read", err);
